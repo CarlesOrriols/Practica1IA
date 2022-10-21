@@ -2,6 +2,6 @@
 /shelf/
 /.idea/workspace.xml
 .idea/
-AIMA.jar
+src/AIMA.jar
 Projecte.iml
-CentralEnergia.jar
+src/CentralEnergia.jar
