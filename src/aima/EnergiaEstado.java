@@ -120,7 +120,8 @@ public class EnergiaEstado {
     // Comprovamos que si la central destino es fuera, el cliente sea NO prioritario/garantizado,
     // de lo contrario tenga sitio para este cliente
     public boolean sePuedeMoverCliente(int i_cliente, int i_centralDestino) {
-        if ( (i_centralDestino == -1 && clientes.get(i_cliente).getContrato() == 1) || consumoMasPerdidas(i_centralDestino, i_cliente) < energiaSobranteCentral(i_centralDestino) )
+        // (Si lo queremos desasignar y es no garantizado) o cabe en la central destino
+        if ( (i_centralDestino == -1 && clientes.get(i_cliente).getContrato() == 1) || consumoMasPerdidas(i_centralDestino, i_cliente) <= energiaSobranteCentral(i_centralDestino) )
             return true;
         return false;
     }
