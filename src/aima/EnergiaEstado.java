@@ -9,15 +9,15 @@ import java.util.Random;
 public class EnergiaEstado {
     private int[] clientes_asignados;
     private double beneficio;
-    private double[] energia_ocupada;
+    private double[] energia_servida;
     private static Centrales centrales;
     private static Clientes clientes;
     private static double[][] distancias; // [central][cliente]
 
-    public EnergiaEstado(int[] clientes_assignados, double beneficio, double[] energia_ocupada) {
+    public EnergiaEstado(int[] clientes_assignados, double beneficio, double[] energia_servida) {
         this.clientes_asignados = clientes_assignados;
         this.beneficio = beneficio;
-        this.energia_ocupada = energia_ocupada;
+        this.energia_servida = energia_servida;
     }
 
     /*
@@ -43,11 +43,11 @@ public class EnergiaEstado {
         }
 
         double beneficio = 0.0;     // beneficio si no hay ningun cliente asignado (mas abajo restamos la penalizacion de los clientes no asignados)
-        double[] energia_ocupada = new double[ce.size()];
-        for (int i = 0; i < energia_ocupada.length; i++) { // inicializamos todas las energias ocupadas a 0
-            energia_ocupada[i] = 0.0;
+        double[] energia_servida = new double[ce.size()];
+        for (int i = 0; i < energia_servida.length; i++) { // inicializamos todas las energias ocupadas a 0
+            energia_servida[i] = 0.0;
         }
-        EnergiaEstado estado = new EnergiaEstado(new int[centrales.size()], beneficio, energia_ocupada);
+        EnergiaEstado estado = new EnergiaEstado(new int[centrales.size()], beneficio, energia_servida);
 
 
         Random random = new Random((long) semilla);
@@ -89,16 +89,16 @@ public class EnergiaEstado {
         // Actualizar energia asignada
         int centralAntigua = clientes_asignados[i_cliente];
         if ( centralAntigua != -1 ) {       // Ya estaba asignado
-            energia_ocupada[centralAntigua] -= consumoMasPerdidas(centralAntigua, i_cliente);
+            energia_servida[centralAntigua] -= consumoMasPerdidas(centralAntigua, i_cliente);
         }
         if ( centralDestino != -1 ) {       // Si no estamos desassignando el cliente
-            energia_ocupada[centralDestino] += consumoMasPerdidas(centralDestino, i_cliente);
+            energia_servida[centralDestino] += consumoMasPerdidas(centralDestino, i_cliente);
         }
 
         // Actualizar el beneficio (parte de coste de tener la central)
-        if ( centralAntigua != -1 && energia_ocupada[centralAntigua] == 0) // La central antigua queda vacia
+        if ( centralAntigua != -1 && energia_servida[centralAntigua] == 0) // La central antigua queda vacia
             beneficio += costeCentralParada(centralAntigua) - costeCentralEncendida(centralAntigua); // Apagamos central antigua
-        if ( centralDestino != -1 && energia_ocupada[centralDestino] == consumoMasPerdidas(centralDestino, i_cliente)) // La central destino solo hay assignada la energia del cliente en transicion
+        if ( centralDestino != -1 && energia_servida[centralDestino] == consumoMasPerdidas(centralDestino, i_cliente)) // La central destino solo hay assignada la energia del cliente en transicion
             beneficio -= costeCentralParada(centralDestino) - costeCentralEncendida(centralDestino); // Encendemos central destino
 
         // Actualizar beneficio (parte que paga el cliente)
@@ -155,7 +155,7 @@ public class EnergiaEstado {
 
     // Cantidad de energia que ya esta asignada
     private double energiaAssignadaCentral (int i_central) {
-        return energia_ocupada[i_central];
+        return energia_servida[i_central];
     }
 
     // Cantidad de energia que puede ser asignada aun

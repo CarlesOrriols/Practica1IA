@@ -21,11 +21,11 @@ public class Main {
         double proporcion_garantizado = 0.6;
         int semilla_random_clientes = 7;
         Clientes clientes = new Clientes(num_clientes, proporciones_cli, proporcion_garantizado, semilla_random_clientes);
-/*
+
         print(centrales);
         print(clientes);
-        print_energia();
-*/
+//        print_energia();
+
         Search typeOfSearch = new HillClimbingSearch();
         SuccessorFunction successorFunction =  new EnergiaSuccessorFunctionHillClimbing();
         HeuristicFunction heuristicFunction = new EnergiaHeuristicFunctionHillClimbing();
