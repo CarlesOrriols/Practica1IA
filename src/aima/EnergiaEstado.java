@@ -125,6 +125,9 @@ public class EnergiaEstado {
         return false;
     }
 
+
+
+
     // Beneficio obtenido del estado
     public double beneficioTotal() {
         return beneficio;
