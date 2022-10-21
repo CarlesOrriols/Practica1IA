@@ -28,6 +28,7 @@ public class EnergiaEstado {
         // Fijamos los static de centrales y clientes
         centrales = ce;
         clientes = cl;
+        distancias = new double[ce.size()][cl.size()];
 
         // Precalcular distancias entre centrales y clientes
         for (int i_central = 0; i_central < centrales.size(); i_central++) {
@@ -95,9 +96,9 @@ public class EnergiaEstado {
         }
 
         // Actualizar el beneficio (parte de coste de tener la central)
-        if (energia_ocupada[centralAntigua] == 0) // La central antigua queda vacia
+        if ( centralAntigua != -1 && energia_ocupada[centralAntigua] == 0) // La central antigua queda vacia
             beneficio += costeCentralParada(centralAntigua) - costeCentralEncendida(centralAntigua); // Apagamos central antigua
-        if ( energia_ocupada[centralDestino] == consumoMasPerdidas(centralDestino, i_cliente)) // La central destino solo hay assignada la energia del cliente en transicion
+        if ( centralDestino != -1 && energia_ocupada[centralDestino] == consumoMasPerdidas(centralDestino, i_cliente)) // La central destino solo hay assignada la energia del cliente en transicion
             beneficio -= costeCentralParada(centralDestino) - costeCentralEncendida(centralDestino); // Encendemos central destino
 
         // Actualizar beneficio (parte que paga el cliente)
