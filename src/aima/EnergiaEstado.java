@@ -51,12 +51,12 @@ public class EnergiaEstado {
         for (int i = 0; i < energia_servida.length; i++) { // inicializamos todas las energias ocupadas a 0
             energia_servida[i] = 0.0;
         }
-        EnergiaEstado estado = new EnergiaEstado(new int[centrales.size()], beneficio, energia_servida);
+        EnergiaEstado estado = new EnergiaEstado(new int[clientes.size()], beneficio, energia_servida);
 
 
         Random random = new Random((long) semilla);
 
-        // Pre-inicializamos todos los clientes sin asignar a ninguna central
+        // Pre-inicializamos todos los clientes sin asignar ninguna central (o sea todos a -1)
         for (int i_cliente = 0; i_cliente < estado.clientes_asignados.length; i_cliente++) {
             estado.clientes_asignados[i_cliente] = -1;
         }
@@ -115,6 +115,36 @@ public class EnergiaEstado {
         // Actualizar clientes asignados
         clientes_asignados[i_cliente] = centralDestino;
     }
+   /* public void moverCliente(int i_cliente, int centralDestino) {
+        // Actualizar energia asignada
+        int centralAntigua = clientes_asignados[i_cliente];
+        if (centralAntigua == -1 && centralDestino != -1) { //Cliente NO asignado -> Asignado
+            beneficio += clientes.get(i_cliente).getConsumo() * precioMwCliente(i_cliente) - precioPenalizacion(i_cliente);
+            if (energia_servida[centralDestino] == 0.0) { //se tiene que encender
+                beneficio += costeCentralEncendida((centralDestino));
+            }
+            energia_servida[centralDestino] += consumoMasPerdidas(centralDestino, i_cliente);
+        }
+        if (centralAntigua != -1 && centralDestino == -1) { //Cliente Asignado -> NO asignado
+            beneficio -= clientes.get(i_cliente).getConsumo() * precioMwCliente(i_cliente) + precioPenalizacion(i_cliente);
+            energia_servida[centralAntigua] -= consumoMasPerdidas(centralAntigua, i_cliente);
+            if (energia_servida[centralAntigua] == 0.0) {
+                beneficio -= costeCentralParada(centralAntigua);
+            }
+        }
+        if (centralAntigua != -1 && centralDestino != -1) { //cliente cambia de central
+            energia_servida[centralAntigua] -= consumoMasPerdidas(centralAntigua, i_cliente);
+            if (energia_servida[centralAntigua] == 0.0) {
+                beneficio -= costeCentralParada(centralAntigua);
+            }
+            if (energia_servida[centralDestino] == 0.0) { //se tiene que encender
+                beneficio += costeCentralEncendida((centralDestino));
+            }
+            energia_servida[centralDestino] += consumoMasPerdidas(centralDestino, i_cliente);
+        }
+        // Actualizar clientes asignados
+        clientes_asignados[i_cliente] = centralDestino;
+    }*/
 
     // Intercanvia la centrals del client i amb la del client j.
     public void intercambiarClientes(int i, int j) {
@@ -137,6 +167,20 @@ public class EnergiaEstado {
             return true;
         return false;
     }
+    /*public boolean sePuedeMoverCliente(int i_cliente, int i_centralDestino) {
+        // (Si lo queremos desasignar y es no garantizado) o cabe en la central destino
+        if (clientes_asignados[i_cliente] == i_centralDestino){
+            return false;
+        }
+        if ( i_centralDestino == -1 && clientes.get(i_cliente).getContrato() == 0)
+            return false;
+        if (consumoMasPerdidas(i_centralDestino, i_cliente) > energiaSobranteCentral(i_centralDestino) ) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }*/
 
     // Cert si el client i es pot intercanviar amb el client j
     public boolean sePuedenIntercambiarClientes(int i, int j) {
@@ -208,7 +252,8 @@ public class EnergiaEstado {
     // Pre: el cliente es no garantizado
     private double precioPenalizacion(int i_cliente) {
         try {
-            return VEnergia.getTarifaClientePenalizacion(clientes.get(i_cliente).getTipo());
+            //Preu per MW no servit!!
+            return (clientes.get(i_cliente).getConsumo() * VEnergia.getTarifaClientePenalizacion(clientes.get(i_cliente).getTipo()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
