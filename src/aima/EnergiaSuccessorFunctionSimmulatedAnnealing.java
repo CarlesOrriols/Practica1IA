@@ -22,6 +22,9 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
             j = myRandom.nextInt(estatVell.getNClientes());
         } while (i==j);
 
+
+
+
         if (estatVell.sePuedenIntercambiarClientes(i,j)) {
             EnergiaEstado estatNou = estatVell;
             estatNou.intercambiarClientes(i, j);
@@ -30,6 +33,8 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
 
             retVal.add(new Successor(S, estatNou));
         }
+
+
 
 
         return retVal;

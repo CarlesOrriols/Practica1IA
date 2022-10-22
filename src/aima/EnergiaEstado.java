@@ -235,7 +235,7 @@ public class EnergiaEstado {
 
     // Numero de centrals
     public int getNCentrales(){
-        return clientes.size();
+        return centrales.size();
     }
 
     // Imprimir el estado
@@ -244,6 +244,8 @@ public class EnergiaEstado {
         for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) { // Centrales
             System.out.println("Cliente " + i_cliente + " -> " + clientes_asignados[i_cliente]);
         }
+        // print que li he posat per veure la FH
+        // System.out.println("Heuristica: " + heuristicFunction());
         System.out.println("---------------------");
     }
 
@@ -309,5 +311,38 @@ public class EnergiaEstado {
     }
 
 
+    // Funcio heurística de prova
+    public double heuristicFunction() {
+        double suma_ocupacio = 0;
+        for (int i = 0; i < getNCentrales(); ++i) {
+            suma_ocupacio += (energia_servida[i] / centrales.get(i).getProduccion()) * 100;
+        }
+
+        double benefici_ideal = 0;
+        double  suma_distancia = 0;
+        for (int i = 0; i < clientes_asignados.length; ++i) {
+            if (clientes_asignados[i] != -1) {
+                suma_distancia += (10000 -  distancias[clientes_asignados[i]][i]) / 100;
+            }
+            double consum = clientes.get(i).getConsumo();
+            if (clientes.get(i).getTipo() == 0) {
+                if (consum > 5) benefici_ideal += 400 * consum;
+                else if (consum <= 2) benefici_ideal += 600 * consum;
+                else benefici_ideal += 500 * consum;
+            }
+            else {
+                if (consum > 5) benefici_ideal += 300 * consum;
+                else if (consum <= 2) benefici_ideal += 500 * consum;
+                else benefici_ideal += 400 * consum;
+            }
+
+        }
+        suma_distancia /= getNClientes();
+        double benefici = (beneficioTotal() / benefici_ideal);
+
+
+
+        return benefici * 0.5 + suma_ocupacio * 0.3 + suma_distancia * 0.2;
+    }
 
 }
