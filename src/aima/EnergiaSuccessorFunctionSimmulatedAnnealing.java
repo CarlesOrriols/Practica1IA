@@ -14,28 +14,58 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
         EnergiaEstado            estatVell  = (EnergiaEstado) o;
         EnergiaHeuristicFunction HF  = new EnergiaHeuristicFunction();
         Random                   myRandom = new Random();
+
+        int op = myRandom.nextInt(3);
         int i,j;
 
-        // Nos ahorramos generar todos los sucesores escogiendo un par de clientes al azar
-        i = myRandom.nextInt(estatVell.getNClientes());
-        do{
-            j = myRandom.nextInt(estatVell.getNClientes());
-        } while (i==j);
+        EnergiaEstado estatNou;
+        double v;
+        String S;
 
+        switch (op) {
+            case 0:
+                do {
+                    i = myRandom.nextInt(estatVell.getNClientes());
+                    j = myRandom.nextInt(estatVell.getNCentrales());
+                } while(!estatVell.sePuedeMoverCliente(i, j));
 
-        // TODO Acabar les funcions per moure client i volcar central
+                estatNou = estatVell;
+                estatNou.moverCliente(i, j);
+                v = HF.getHeuristicValue(estatNou);
 
-        if (estatVell.sePuedenIntercambiarClientes(i,j)) {
-            EnergiaEstado estatNou = estatVell;
-            estatNou.intercambiarClientes(i, j);
-            double   v = HF.getHeuristicValue(estatNou);
-            String S = EnergiaEstado.INTERCAMBIO + " " + i + " " + j + " Coste(" + v + ") ---> " + estatNou.toString();
+                S = estatNou.MOVIMIENTO + " " + i + " " + j + " Coste(" + v + ") ---> " + estatNou.toString();
+                retVal.add(new Successor(S, estatNou));
+                break;
 
-            retVal.add(new Successor(S, estatNou));
+            case 1:
+                // Nos ahorramos generar todos los sucesores escogiendo un par de clientes al azar
+                i = myRandom.nextInt(estatVell.getNClientes());
+                do{
+                    j = myRandom.nextInt(estatVell.getNClientes());
+                } while (i==j || !estatVell.sePuedenIntercambiarClientes(i,j));
+
+                estatNou = estatVell;
+                estatNou.intercambiarClientes(i, j);
+                v = HF.getHeuristicValue(estatNou);
+                S = EnergiaEstado.INTERCAMBIO + " " + i + " " + j + " Coste(" + v + ") ---> " + estatNou.toString();
+
+                retVal.add(new Successor(S, estatNou));
+                break;
+
+            case 2:
+                i = myRandom.nextInt(estatVell.getNCentrales());
+                do{
+                    j = myRandom.nextInt(estatVell.getNCentrales());
+                } while (i==j || !estatVell.sePuedeVaciarCentral(i, j));
+
+                estatNou = estatVell;
+                estatNou.vaciarCentral(i, j);
+                v = HF.getHeuristicValue(estatNou);
+
+                S = estatNou.VACIADO + " " + i + " " + j + " Coste(" + v + ") ---> " + estatNou.toString();
+                retVal.add(new Successor(S, estatNou));
+                break;
         }
-
-
-
 
         return retVal;
     }
