@@ -29,7 +29,7 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
                     j = myRandom.nextInt(estatVell.getNCentrales());
                 } while(!estatVell.sePuedeMoverCliente(i, j));
 
-                estatNou = estatVell;
+                estatNou = new EnergiaEstado(estatVell);
                 estatNou.moverCliente(i, j);
                 v = HF.getHeuristicValue(estatNou);
 
@@ -44,7 +44,7 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
                     j = myRandom.nextInt(estatVell.getNClientes());
                 } while (!estatVell.sePuedenIntercambiarClientes(i,j));
 
-                estatNou = estatVell;
+                estatNou = new EnergiaEstado(estatVell);
                 estatNou.intercambiarClientes(i, j);
                 v = HF.getHeuristicValue(estatNou);
                 S = EnergiaEstado.INTERCAMBIO + " " + i + " " + j + " Coste(" + v + ") ---> " + estatNou.toString();
@@ -58,7 +58,7 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
                     j = myRandom.nextInt(estatVell.getNCentrales());
                 } while (!estatVell.sePuedeVaciarCentral(i, j));
 
-                estatNou = estatVell;
+                estatNou = new EnergiaEstado(estatVell);
                 estatNou.vaciarCentral(i, j);
                 v = HF.getHeuristicValue(estatNou);
 

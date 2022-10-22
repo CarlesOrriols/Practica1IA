@@ -18,10 +18,17 @@ public class EnergiaEstado {
     private static Clientes clientes;
     private static double[][] distancias; // [central][cliente]
 
-    public EnergiaEstado(int[] clientes_assignados, double beneficio, double[] energia_servida) {
-        this.clientes_asignados = clientes_assignados;
-        this.beneficio = beneficio;
-        this.energia_servida = energia_servida;
+    public EnergiaEstado(EnergiaEstado energiaEstado) {
+        this.clientes_asignados = new int[energiaEstado.clientes_asignados.length];
+        this.energia_servida = new double[energiaEstado.energia_servida.length];
+        this.beneficio = energiaEstado.beneficio;
+
+        for(int i = 0; i < clientes_asignados.length; ++i) {
+            this.clientes_asignados[i] = energiaEstado.clientes_asignados[i];
+        }
+        for(int i = 0; i < energia_servida.length; ++i) {
+            this.energia_servida[i] = energiaEstado.energia_servida[i];
+        }
     }
 
     /*
