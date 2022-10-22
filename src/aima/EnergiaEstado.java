@@ -28,7 +28,7 @@ public class EnergiaEstado {
     * Creamos un estado inicial assignando solo los clientes con prioridad garantizada en una central aleatoria,
     * controlando que la central tenga capacidad!
     */
-    public static EnergiaEstado estadoInicial(Centrales ce, Clientes cl, int semilla) {
+    public EnergiaEstado(Centrales ce, Clientes cl, int semilla) { // Random estado inicial
         // Fijamos los static de centrales y clientes
         centrales = ce;
         clientes = cl;
@@ -46,42 +46,39 @@ public class EnergiaEstado {
             }
         }
 
-        double beneficio = 0.0;     // beneficio si no hay ningun cliente asignado (mas abajo restamos la penalizacion de los clientes no asignados)
-        double[] energia_servida = new double[ce.size()];
+        beneficio = 0.0;     // beneficio si no hay ningun cliente asignado (mas abajo restamos la penalizacion de los clientes no asignados)
+        energia_servida = new double[ce.size()];
         for (int i = 0; i < energia_servida.length; i++) { // inicializamos todas las energias ocupadas a 0
             energia_servida[i] = 0.0;
         }
-        EnergiaEstado estado = new EnergiaEstado(new int[clientes.size()], beneficio, energia_servida);
-
+        clientes_asignados = new int[clientes.size()];
 
         Random random = new Random((long) semilla);
 
         // Pre-inicializamos todos los clientes sin asignar ninguna central (o sea todos a -1)
-        for (int i_cliente = 0; i_cliente < estado.clientes_asignados.length; i_cliente++) {
-            estado.clientes_asignados[i_cliente] = -1;
+        for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) {
+            clientes_asignados[i_cliente] = -1;
         }
 
         // Asignamos los clientes a una central random, si no puede ser asignado por una restriccion del problema, se asigna a otra tambien de forma aleatoria
-        for (int i_cliente = 0; i_cliente < estado.clientes_asignados.length; i_cliente++) {
+        for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) {
             if ( clientes.get(i_cliente).getContrato() == 0 ) { // clientes garantizados se asignan a una central
                 boolean cli_asignado = false;
                 while ( !cli_asignado ) {
                     int central_random = random.nextInt(centrales.size());
-                    if (estado.sePuedeMoverCliente(i_cliente, central_random)) {
-                        estado.moverCliente(i_cliente, central_random);
+                    if (sePuedeMoverCliente(i_cliente, central_random)) {
+                        moverCliente(i_cliente, central_random);
                         cli_asignado = true;
                     }
                 }
             } else { // clientes no garantizados se actualiza el beneficio con la penalizacion pertinente
                 try {
-                    estado.beneficio -= estado.precioPenalizacion(i_cliente);
+                    beneficio -= precioPenalizacion(i_cliente);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
         }
-
-        return estado;
     }
 
 
