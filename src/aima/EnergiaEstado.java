@@ -9,10 +9,6 @@ import java.util.Random;
 import static java.lang.Math.sqrt;
 
 public class EnergiaEstado {
-    public static String MOVIMIENTO = "Movimiento";
-    public static String INTERCAMBIO = "Intercambio";
-    public static String VACIADO = "Vaciado";
-
     private int[] clientes_asignados;
     private double beneficio;
     private double[] energia_servida;
@@ -340,6 +336,7 @@ public class EnergiaEstado {
         for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) { // Centrales
             System.out.println("Cliente " + i_cliente + " -> " + clientes_asignados[i_cliente]);
         }
+        System.out.println("Beneficio: " + beneficio);
         // print que li he posat per veure la FH
         System.out.println("Heuristica: " + heuristicFunction());
         System.out.println("---------------------");

@@ -20,10 +20,8 @@ public class EnergiaSuccessorFunctionHillClimbing implements SuccessorFunction {
                 if(estatVell.sePuedeMoverCliente(i, j)) {
                     EnergiaEstado estatNou = new EnergiaEstado(estatVell);
                     estatNou.moverCliente(i, j);
-                    double v = HF.getHeuristicValue(estatNou);
 
-                    String S = estatNou.MOVIMIENTO + " " + i + " " + j + " Coste(" + v + ") ---> " + estatNou.toString();
-                    retVal.add(new Successor(S, estatNou));
+                    retVal.add(new Successor("", estatNou));
 
                 }
             }
@@ -35,10 +33,8 @@ public class EnergiaSuccessorFunctionHillClimbing implements SuccessorFunction {
                 if(estatVell.sePuedenIntercambiarClientes(i, j)) {
                     EnergiaEstado estatNou = new EnergiaEstado(estatVell);
                     estatNou.intercambiarClientes(i, j);
-                    double v = HF.getHeuristicValue(estatNou);
 
-                    String S = estatNou.INTERCAMBIO + " " + i + " " + j + " Coste(" + v + ") ---> " + estatNou.toString();
-                    retVal.add(new Successor(S, estatNou));
+                    retVal.add(new Successor("", estatNou));
 
                 }
             }
@@ -50,10 +46,8 @@ public class EnergiaSuccessorFunctionHillClimbing implements SuccessorFunction {
                 if(estatVell.sePuedeVaciarCentral(i, j)) {
                     EnergiaEstado estatNou = new EnergiaEstado(estatVell);
                     estatNou.vaciarCentral(i, j);
-                    double v = HF.getHeuristicValue(estatNou);
 
-                    String S = estatNou.VACIADO + " " + i + " " + j + " Coste(" + v + ") ---> " + estatNou.toString();
-                    retVal.add(new Successor(S, estatNou));
+                    retVal.add(new Successor("", estatNou));
 
                 }
             }
