@@ -7,6 +7,10 @@ import IA.Energia.VEnergia;
 import java.util.Random;
 
 public class EnergiaEstado {
+    public static String MOVIMIENTO = "Movimiento";
+    public static String INTERCAMBIO = "Intercambio";
+    public static String VACIADO = "Vaciado";
+
     private int[] clientes_asignados;
     private double beneficio;
     private double[] energia_servida;
@@ -112,6 +116,13 @@ public class EnergiaEstado {
         clientes_asignados[i_cliente] = centralDestino;
     }
 
+    // Intercanvia la centrals del client i amb la del client j.
+    public void intercambiarClientes(int i, int j) {
+    }
+
+    // Mou tots els clients de la central i a la central j.
+    public void vaciarCentral(int i, int j) {
+    }
 
 
 
@@ -127,12 +138,30 @@ public class EnergiaEstado {
         return false;
     }
 
+    // Cert si el client i es pot intercanviar amb el client j
+    public boolean sePuedenIntercambiarClientes(int i, int j) {
+        return false;
+    }
 
+    // Cert si la central i pot bolcar tots els seus clients a la central j
+    public boolean sePuedeVaciarCentral(int i, int j) {
+        return false;
+    }
 
 
     // Beneficio obtenido del estado
     public double beneficioTotal() {
         return beneficio;
+    }
+
+    // Numero de clientes
+    public int getNClientes(){
+        return clientes.size();
+    }
+
+    // Numero de centrals
+    public int getNCentrales(){
+        return clientes.size();
     }
 
     // Imprimir el estado
@@ -203,5 +232,7 @@ public class EnergiaEstado {
             throw new RuntimeException(e);
         }
     }
+
+
 
 }

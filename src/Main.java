@@ -2,7 +2,7 @@ import IA.Energia.Centrales;
 import IA.Energia.Clientes;
 import IA.Energia.VEnergia;
 import aima.EnergiaEstado;
-import aima.EnergiaHeuristicFunctionHillClimbing;
+import aima.EnergiaHeuristicFunction;
 import aima.EnergiaSuccessorFunctionHillClimbing;
 import aima.search.framework.*;
 import aima.search.informed.HillClimbingSearch;
@@ -28,7 +28,7 @@ public class Main {
 
         Search typeOfSearch = new HillClimbingSearch();
         SuccessorFunction successorFunction =  new EnergiaSuccessorFunctionHillClimbing();
-        HeuristicFunction heuristicFunction = new EnergiaHeuristicFunctionHillClimbing();
+        HeuristicFunction heuristicFunction = new EnergiaHeuristicFunction();
         int semilla_random_estado_inicial = 3;
         EnergiaEstado estado_inicial = EnergiaEstado.estadoInicial(centrales, clientes, semilla_random_estado_inicial);
         estado_inicial.print();
