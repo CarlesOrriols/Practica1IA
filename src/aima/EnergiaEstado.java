@@ -301,7 +301,7 @@ public class EnergiaEstado {
             double sum = 0;
             for (int c = 0; c < clientes_asignados.length; c++) {
                 if (clientes_asignados[c] == cOrigen) {
-                    sum += consumoMasPerdidas(c, cDestino);
+                    sum += consumoMasPerdidas(cDestino, c);
                 }
                 if (sum > energiaSobranteCentral(cDestino)) {
                     return false;
@@ -438,7 +438,7 @@ public class EnergiaEstado {
         // double benefici = (beneficioTotal() / benefici_ideal) * 100;
 
 
-        return beneficioTotal() * (suma_ocupacio * 0.7 + suma_distancia * 0.3);
+        return beneficioTotal(); //* (suma_ocupacio * 0.7 + suma_distancia * 0.3);
     }
 
 }
