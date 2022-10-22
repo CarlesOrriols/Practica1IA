@@ -206,23 +206,23 @@ public class EnergiaEstado {
     // Mou tots els clients de la central i a la central j.
     public void vaciarCentral(int cOrigen, int cDestino) {
         if (cOrigen == -1 && cDestino != -1) { // Asignamos todos los clientes de fuera a cDestino
-            if (energia_servida[cDestino] == 0.0) {
+            if (energia_servida[cDestino] == 0.0) { // Si la central destino esta vacia, la encendemos
                 beneficio -= costeCentralEncendida(cDestino);
                 beneficio += costeCentralParada(cDestino);
             }
-            for (int c = 0; c < clientes_asignados.length; c++) {
-                if (clientes_asignados[c] == -1) {
-                    energia_servida[cDestino] += consumoMasPerdidas(cDestino, c);
-                    beneficio += clientes.get(c).getConsumo() * precioMwCliente(c) + precioPenalizacion(c);
-                    clientes_asignados[c] = cDestino;
+            for (int cli = 0; cli < clientes_asignados.length; cli++) {
+                if (clientes_asignados[cli] == -1) {
+                    energia_servida[cDestino] += consumoMasPerdidas(cDestino, cli);
+                    beneficio += clientes.get(cli).getConsumo() * precioMwCliente(cli) + precioPenalizacion(cli);
+                    clientes_asignados[cli] = cDestino;
                 }
             }
         }
         else if (cOrigen != -1 && cDestino == -1){ // Desasignamos clientes de una cOrigen
-            for (int c = 0; c < clientes_asignados.length; c++) {
-                if (clientes_asignados[c] == cOrigen) {
-                    beneficio -= clientes.get(c).getConsumo() * precioMwCliente(c) + precioPenalizacion(c);
-                    clientes_asignados[c] = -1;
+            for (int cli = 0; cli < clientes_asignados.length; cli++) {
+                if (clientes_asignados[cli] == cOrigen) {
+                    beneficio -= clientes.get(cli).getConsumo() * precioMwCliente(cli) + precioPenalizacion(cli);
+                    clientes_asignados[cli] = -1;
                 }
             }
             energia_servida[cOrigen] = 0.0;
@@ -233,10 +233,14 @@ public class EnergiaEstado {
             energia_servida[cOrigen] = 0.0;
             beneficio -= costeCentralParada(cOrigen);
             beneficio += costeCentralEncendida(cOrigen);
-            for (int c = 0; c < clientes_asignados.length; c++) {
-                if (clientes_asignados[c] == cOrigen) {
-                    clientes_asignados[c] = cDestino;
-                    energia_servida[cDestino] += consumoMasPerdidas(cDestino,c);
+            if (energia_servida[cDestino] == 0.0) {
+                beneficio += costeCentralParada(cDestino);
+                beneficio -= costeCentralEncendida(cDestino);
+            }
+            for (int cli = 0; cli < clientes_asignados.length; cli++) {
+                if (clientes_asignados[cli] == cOrigen) {
+                    clientes_asignados[cli] = cDestino;
+                    energia_servida[cDestino] += consumoMasPerdidas(cDestino,cli);
                 }
             }
         }
@@ -334,7 +338,7 @@ public class EnergiaEstado {
     public void print() {
         System.out.println("------ ESTADO -------");
         for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) { // Centrales
-            System.out.println("Cliente " + i_cliente + " -> " + clientes_asignados[i_cliente]);
+            System.out.println("Cliente " + i_cliente + " -> " + clientes_asignados[i_cliente] + " -> " + clientes.get(i_cliente).getConsumo()*precioMwCliente(i_cliente) + "->" + precioPenalizacion(i_cliente) + " -> " + clientes.get(i_cliente).getContrato());
         }
         System.out.println("Beneficio: " + beneficio);
         // print que li he posat per veure la FH

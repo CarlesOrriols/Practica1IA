@@ -23,9 +23,9 @@ public class Main {
         int semilla_random_clientes = 7;
         Clientes clientes = new Clientes(num_clientes, proporciones_cli, proporcion_garantizado, semilla_random_clientes);
 
- /*       print(centrales);
-        print(clientes);
-        print_energia();*/
+        print(centrales);
+//        print(clientes);
+ /*       print_energia();*/
 
         Search typeOfSearch = new HillClimbingSearch();
         SuccessorFunction successorFunction =  new EnergiaSuccessorFunctionHillClimbing();
