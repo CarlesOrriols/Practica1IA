@@ -16,7 +16,7 @@ public class EnergiaSuccessorFunctionHillClimbing implements SuccessorFunction {
 
         // Moure clients
         for (int i = 0; i < estatVell.getNClientes(); i++) {
-            for (int j = 0; j < estatVell.getNCentrales(); j++) {
+            for (int j = -1; j < estatVell.getNCentrales(); j++) {
                 if(estatVell.sePuedeMoverCliente(i, j)) {
                     EnergiaEstado estatNou = estatVell;
                     estatNou.moverCliente(i, j);
@@ -45,8 +45,8 @@ public class EnergiaSuccessorFunctionHillClimbing implements SuccessorFunction {
         }
 
         // Buidar central
-        for (int i = 0; i < estatVell.getNCentrales(); i++) {
-            for (int j = 0; j < estatVell.getNCentrales(); j++) {
+        for (int i = -1; i < estatVell.getNCentrales(); i++) {
+            for (int j = -1; j < estatVell.getNCentrales(); j++) {
                 if(estatVell.sePuedeVaciarCentral(i, j)) {
                     EnergiaEstado estatNou = estatVell;
                     estatNou.vaciarCentral(i, j);
