@@ -170,6 +170,36 @@ public class EnergiaEstado {
 
     // Mou tots els clients de la central i a la central j.
     public void vaciarCentral(int i, int j) {
+        if (i == -1 && j != -1) {
+            if (energia_servida[j] == 0.0) beneficio -= costeCentralEncendida(j);
+            for (int c = 0; c < clientes_asignados.length; c++) {
+                if (clientes_asignados[c] == -1) {
+                    energia_servida[j] += consumoMasPerdidas(j, c);
+                    beneficio += clientes.get(c).getConsumo() * precioMwCliente(c) + precioPenalizacion(c);
+                    clientes_asignados[c] = j;
+                }
+            }
+        }
+        else if (i != -1 && j == -1){
+            for (int c = 0; c < clientes_asignados.length; c++) {
+                if (clientes_asignados[c] == i) {
+                    beneficio -= clientes.get(c).getConsumo() * precioMwCliente(c) - precioPenalizacion(c);
+                    clientes_asignados[c] = -1;
+                }
+            }
+            energia_servida[i] =0.0;
+            beneficio -= costeCentralParada(i);
+        }
+        else {
+            energia_servida[i] = 0.0;
+            beneficio -= costeCentralParada(i);
+            for (int c = 0; c < clientes_asignados.length; c++) {
+                if (clientes_asignados[c] == i) {
+                    clientes_asignados[c] = j;
+                    energia_servida[j] += consumoMasPerdidas(j,c);
+                }
+            }
+        }
     }
 
 
@@ -219,7 +249,21 @@ public class EnergiaEstado {
 
     // Cert si la central i pot bolcar tots els seus clients a la central j
     public boolean sePuedeVaciarCentral(int i, int j) {
-        return false;
+        if (i == j) return false;
+        if (i != -1 && j == -1){
+            for (int c = 0; c < clientes_asignados.length; c++) {
+                if (clientes_asignados[c] == i && clientes.get(c).getContrato() == 0) return false;
+            }
+        }
+        if (j != -1) {
+            double sum = 0;
+            for (int c = 0; c < clientes_asignados.length; c++) {
+                if (clientes_asignados[c] == i)
+                    sum += consumoMasPerdidas(c,j);
+            }
+            return sum <= energiaSobranteCentral(j);
+        }
+        return true;
     }
 
 
