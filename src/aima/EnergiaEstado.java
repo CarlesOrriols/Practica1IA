@@ -289,7 +289,7 @@ public class EnergiaEstado {
             System.out.println("Cliente " + i_cliente + " -> " + clientes_asignados[i_cliente]);
         }
         // print que li he posat per veure la FH
-        // System.out.println("Heuristica: " + heuristicFunction());
+        System.out.println("Heuristica: " + heuristicFunction());
         System.out.println("---------------------");
     }
 
@@ -355,19 +355,28 @@ public class EnergiaEstado {
     }
 
 
-    // Funcio heurística de prova
+    // Funcio heurística de prova (he comentat moltes coses pq nose si al final les necessitarem)
+    // TODO: Acabar de mirar la heuristica pq em temo que no acaba de funcionar hehe
+
     public double heuristicFunction() {
         double suma_ocupacio = 0;
+        // double benefici_ideal = 0;
         for (int i = 0; i < getNCentrales(); ++i) {
-            suma_ocupacio += (energia_servida[i] / centrales.get(i).getProduccion()) * 100;
+            suma_ocupacio += (energia_servida[i] / centrales.get(i).getProduccion());
+            /*
+            if (energia_servida[i] != 0)
+                benefici_ideal -= costeCentralEncendida(i);
+            */
         }
+        suma_ocupacio /= getNCentrales();
 
-        double benefici_ideal = 0;
         double  suma_distancia = 0;
         for (int i = 0; i < clientes_asignados.length; ++i) {
             if (clientes_asignados[i] != -1) {
-                suma_distancia += (10000 -  distancias[clientes_asignados[i]][i]) / 100;
+                // restant 10000 a la distancia aconseguirem que la distancia més llarga ens doni el resultat més petit
+                suma_distancia += (10000 -  distancias[clientes_asignados[i]][i]) / 10000;
             }
+            /* Coses que he comentat perquè de moment veig innecessaries
             double consum = clientes.get(i).getConsumo();
             if (clientes.get(i).getTipo() == 0) {
                 if (consum > 5) benefici_ideal += 400 * consum;
@@ -379,14 +388,13 @@ public class EnergiaEstado {
                 else if (consum <= 2) benefici_ideal += 500 * consum;
                 else benefici_ideal += 400 * consum;
             }
-
+            */
         }
         suma_distancia /= getNClientes();
-        double benefici = (beneficioTotal() / benefici_ideal);
+        // double benefici = (beneficioTotal() / benefici_ideal) * 100;
 
 
-
-        return benefici * 0.5 + suma_ocupacio * 0.3 + suma_distancia * 0.2;
+        return beneficioTotal() * (suma_ocupacio * 0.7 + suma_distancia * 0.3);
     }
 
 }

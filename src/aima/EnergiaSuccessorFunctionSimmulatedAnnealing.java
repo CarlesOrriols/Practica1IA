@@ -23,7 +23,7 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
         } while (i==j);
 
 
-
+        // TODO Acabar les funcions per moure client i volcar central
 
         if (estatVell.sePuedenIntercambiarClientes(i,j)) {
             EnergiaEstado estatNou = estatVell;
