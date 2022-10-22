@@ -42,7 +42,7 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
                 i = myRandom.nextInt(estatVell.getNClientes());
                 do{
                     j = myRandom.nextInt(estatVell.getNClientes());
-                } while (i==j || !estatVell.sePuedenIntercambiarClientes(i,j));
+                } while (!estatVell.sePuedenIntercambiarClientes(i,j));
 
                 estatNou = estatVell;
                 estatNou.intercambiarClientes(i, j);
@@ -56,7 +56,7 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
                 i = myRandom.nextInt(estatVell.getNCentrales());
                 do{
                     j = myRandom.nextInt(estatVell.getNCentrales());
-                } while (i==j || !estatVell.sePuedeVaciarCentral(i, j));
+                } while (!estatVell.sePuedeVaciarCentral(i, j));
 
                 estatNou = estatVell;
                 estatNou.vaciarCentral(i, j);

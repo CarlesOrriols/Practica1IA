@@ -151,7 +151,7 @@ public class EnergiaEstado {
 
     // Mou tots els clients de la central i a la central j.
     public void vaciarCentral(int cOrigen, int cDestino) {
-        if (cOrigen == -1 && cDestino != -1) {
+        if (cOrigen == -1 && cDestino != -1) { // Asignamos todos los clientes de fuera a cDestino
             if (energia_servida[cDestino] == 0.0) {
                 beneficio -= costeCentralEncendida(cDestino);
                 beneficio += costeCentralParada(cDestino);
@@ -164,19 +164,21 @@ public class EnergiaEstado {
                 }
             }
         }
-        else if (cOrigen != -1 && cDestino == -1){
+        else if (cOrigen != -1 && cDestino == -1){ // Desasignamos clientes de una cOrigen
             for (int c = 0; c < clientes_asignados.length; c++) {
                 if (clientes_asignados[c] == cOrigen) {
-                    beneficio -= clientes.get(c).getConsumo() * precioMwCliente(c) - precioPenalizacion(c);
+                    beneficio -= clientes.get(c).getConsumo() * precioMwCliente(c) + precioPenalizacion(c);
                     clientes_asignados[c] = -1;
                 }
             }
-            energia_servida[cOrigen] =0.0;
-            beneficio -= costeCentralParada(cOrigen);
-        }
-        else {
             energia_servida[cOrigen] = 0.0;
             beneficio -= costeCentralParada(cOrigen);
+            beneficio += costeCentralEncendida(cOrigen);
+        }
+        else { // Volcamos una central a otra (ninguna esta fuera)
+            energia_servida[cOrigen] = 0.0;
+            beneficio -= costeCentralParada(cOrigen);
+            beneficio += costeCentralEncendida(cOrigen);
             for (int c = 0; c < clientes_asignados.length; c++) {
                 if (clientes_asignados[c] == cOrigen) {
                     clientes_asignados[c] = cDestino;
@@ -230,26 +232,29 @@ public class EnergiaEstado {
     }
 
     // Cert si la central i pot bolcar tots els seus clients a la central j
-    public boolean sePuedeVaciarCentral(int i, int j) {
-        if (i == j) {
+    public boolean sePuedeVaciarCentral(int cOrigen, int cDestino) {
+        if (cOrigen == cDestino) {
             return false;
         }
-        if (i != -1 && j == -1) {
+        if (cOrigen != -1 && cDestino == -1) {
             for (int c = 0; c < clientes_asignados.length; c++) {
-                if (clientes_asignados[c] == i && clientes.get(c).getContrato() == 0) {
+                if (clientes_asignados[c] == cOrigen && clientes.get(c).getContrato() == 0) {
                     return false;
                 }
             }
         }
-        if (j != -1) {
+        if (cDestino != -1) {
             double sum = 0;
             for (int c = 0; c < clientes_asignados.length; c++) {
-                if (clientes_asignados[c] == i) {
-                    sum += consumoMasPerdidas(c, j);
+                if (clientes_asignados[c] == cOrigen) {
+                    sum += consumoMasPerdidas(c, cDestino);
+                }
+                if (sum > energiaSobranteCentral(cDestino)) {
+                    return false;
                 }
             }
             if (sum > 0) {
-                return sum <= energiaSobranteCentral(j);
+                return true;
             }
         }
         return false;
@@ -291,14 +296,9 @@ public class EnergiaEstado {
         return clientes.get(i_cliente).getConsumo() * (1+VEnergia.getPerdida(dist));
     }
 
-    // Cantidad de energia que ya esta asignada
-    private double energiaAssignadaCentral (int i_central) {
-        return energia_servida[i_central];
-    }
-
     // Cantidad de energia que puede ser asignada aun
     private double energiaSobranteCentral (int i_central) {
-        return centrales.get(i_central).getProduccion() - energiaAssignadaCentral(i_central);
+        return centrales.get(i_central).getProduccion() - energia_servida[i_central];
     }
 
     // Valoramos que el precio de Mw pagado por el cliente es el de ser servido por
