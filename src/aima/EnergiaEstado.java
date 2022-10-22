@@ -90,6 +90,58 @@ public class EnergiaEstado {
         }
     }
 
+    public EnergiaEstado(Centrales ce, Clientes cl) { // Estado inicial asignando el maximo de clientes a las centrales de indice menor
+        // Fijamos los static de centrales y clientes
+        centrales = ce;
+        clientes = cl;
+        distancias = new double[ce.size()][cl.size()];
+
+        // Precalcular distancias entre centrales y clientes
+        for (int i_central = 0; i_central < centrales.size(); i_central++) {
+            for (int i_cliente = 0; i_cliente < clientes.size(); i_cliente++) {
+                int ce_x = centrales.get(i_central).getCoordX();
+                int ce_y = centrales.get(i_central).getCoordY();
+                int cl_x = clientes.get(i_cliente).getCoordX();
+                int cl_y = clientes.get(i_cliente).getCoordY();
+
+                distancias[i_central][i_cliente] = sqrt(Math.pow(ce_x - cl_x, 2) + Math.pow(ce_y - cl_y, 2)); // sqrt( dX^2 + dY^2)
+            }
+        }
+
+        beneficio = 0.0;     // beneficio si no hay ningun cliente asignado (mas abajo restamos la penalizacion de los clientes no asignados)
+        energia_servida = new double[ce.size()];
+        for (int i = 0; i < energia_servida.length; i++) { // inicializamos todas las energias ocupadas a 0
+            energia_servida[i] = 0.0;
+        }
+        clientes_asignados = new int[clientes.size()];
+
+        // Pre-inicializamos todos los clientes sin asignar ninguna central (o sea todos a -1)
+        for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) {
+            clientes_asignados[i_cliente] = -1;
+        }
+
+        int i_central = 0;
+        for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) {
+            if (clientes.get(i_cliente).getContrato() == 0) { // clientes garantizados se asignan a una central
+                boolean cli_asignado = false;
+                while ( !cli_asignado ) {
+                    if (sePuedeMoverCliente(i_cliente, i_central)) {
+                        moverCliente(i_cliente, i_central);
+                        cli_asignado = true;
+                    } else {
+                        i_central++;
+                    }
+                }
+            } else { // clientes no garantizados se actualiza el beneficio con la penalizacion pertinente
+                try {
+                    beneficio -= precioPenalizacion(i_cliente);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
 
     /*
      * OPERADORES
