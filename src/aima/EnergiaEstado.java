@@ -6,6 +6,8 @@ import IA.Energia.VEnergia;
 
 import java.util.Random;
 
+import static java.lang.Math.sqrt;
+
 public class EnergiaEstado {
     public static String MOVIMIENTO = "Movimiento";
     public static String INTERCAMBIO = "Intercambio";
@@ -49,7 +51,7 @@ public class EnergiaEstado {
                 int cl_x = clientes.get(i_cliente).getCoordX();
                 int cl_y = clientes.get(i_cliente).getCoordY();
 
-                distancias[i_central][i_cliente] = Math.sqrt( Math.pow(ce_x-cl_x, 2) + Math.pow(ce_y-cl_y, 2)); // sqrt( dX^2 + dY^2)
+                distancias[i_central][i_cliente] = sqrt( Math.pow(ce_x-cl_x, 2) + Math.pow(ce_y-cl_y, 2)); // sqrt( dX^2 + dY^2)
             }
         }
 
@@ -367,7 +369,7 @@ public class EnergiaEstado {
         for (int i = 0; i < clientes_asignados.length; ++i) {
             if (clientes_asignados[i] != -1) {
                 // restant 10000 a la distancia aconseguirem que la distancia més llarga ens doni el resultat més petit
-                suma_distancia += (10000 -  distancias[clientes_asignados[i]][i]) / 10000;
+                suma_distancia += (sqrt(20000) -  distancias[clientes_asignados[i]][i]) / 10000;
             }
             /* Coses que he comentat perquè de moment veig innecessaries
             double consum = clientes.get(i).getConsumo();
