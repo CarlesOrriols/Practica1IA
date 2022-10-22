@@ -115,7 +115,7 @@ public class EnergiaEstado {
         // Actualizar clientes asignados
         clientes_asignados[i_cliente] = centralDestino;
     }
-   /* public void moverCliente(int i_cliente, int centralDestino) {
+    /*public void moverCliente(int i_cliente, int centralDestino) {
         // Actualizar energia asignada
         int centralAntigua = clientes_asignados[i_cliente];
         if (centralAntigua == -1 && centralDestino != -1) { //Cliente NO asignado -> Asignado
@@ -125,14 +125,14 @@ public class EnergiaEstado {
             }
             energia_servida[centralDestino] += consumoMasPerdidas(centralDestino, i_cliente);
         }
-        if (centralAntigua != -1 && centralDestino == -1) { //Cliente Asignado -> NO asignado
+        else if (centralAntigua != -1 && centralDestino == -1) { //Cliente Asignado -> NO asignado
             beneficio -= clientes.get(i_cliente).getConsumo() * precioMwCliente(i_cliente) + precioPenalizacion(i_cliente);
             energia_servida[centralAntigua] -= consumoMasPerdidas(centralAntigua, i_cliente);
             if (energia_servida[centralAntigua] == 0.0) {
                 beneficio -= costeCentralParada(centralAntigua);
             }
         }
-        if (centralAntigua != -1 && centralDestino != -1) { //cliente cambia de central
+        else if (centralAntigua != -1 && centralDestino != -1) { //cliente cambia de central
             energia_servida[centralAntigua] -= consumoMasPerdidas(centralAntigua, i_cliente);
             if (energia_servida[centralAntigua] == 0.0) {
                 beneficio -= costeCentralParada(centralAntigua);
@@ -148,6 +148,24 @@ public class EnergiaEstado {
 
     // Intercanvia la centrals del client i amb la del client j.
     public void intercambiarClientes(int i, int j) {
+        int i_central = clientes_asignados[i];
+        int j_central = clientes_asignados[j];
+        if (i_central != -1 && j_central != -1) {
+            energia_servida[i_central] -= consumoMasPerdidas(i_central, i) + consumoMasPerdidas(i_central, j);
+            energia_servida[j_central] -= consumoMasPerdidas(j_central, j) + consumoMasPerdidas(j_central, i);
+        }
+        if (i_central == -1 && j_central != -1) {
+            energia_servida[j_central] -= consumoMasPerdidas(j_central, j) + consumoMasPerdidas(j_central, i);
+            beneficio -= clientes.get(j).getConsumo() * precioMwCliente(j) + precioPenalizacion(i)
+                    + clientes.get(i).getConsumo() * precioMwCliente(i) - precioPenalizacion(j);
+        }
+        if (i_central != -1 && j_central == -1) {
+            energia_servida[i_central] -= consumoMasPerdidas(i_central, i) + consumoMasPerdidas(i_central, j);
+            beneficio -= clientes.get(i).getConsumo() * precioMwCliente(i) + precioPenalizacion(j)
+                    + clientes.get(j).getConsumo() * precioMwCliente(i) - precioPenalizacion(i);
+        }
+        clientes_asignados[i] = j_central;
+        clientes_asignados[j] = i_central;
     }
 
     // Mou tots els clients de la central i a la central j.
@@ -174,7 +192,7 @@ public class EnergiaEstado {
         }
         if ( i_centralDestino == -1 && clientes.get(i_cliente).getContrato() == 0)
             return false;
-        if (consumoMasPerdidas(i_centralDestino, i_cliente) > energiaSobranteCentral(i_centralDestino) ) {
+        if (clientes_asignados[i_cliente] != -1 && consumoMasPerdidas(i_centralDestino, i_cliente) > energiaSobranteCentral(i_centralDestino) ) {
             return false;
         }
         else {
@@ -184,7 +202,19 @@ public class EnergiaEstado {
 
     // Cert si el client i es pot intercanviar amb el client j
     public boolean sePuedenIntercambiarClientes(int i, int j) {
-        return false;
+        int i_central = clientes_asignados[i];
+        int j_central = clientes_asignados[j];
+        if (i == j) return false;       // no son el mismo client
+        else if (i_central == j_central) return false;  //no son de la misma central
+        if ( (i_central == -1 && clientes.get(j).getContrato() == 0) || (j_central == -1 && clientes.get(i).getContrato() == 0) )//si son garantizado no se pueden desasignar
+            return false;
+        else if (i_central != -1 && consumoMasPerdidas(i_central, j) > energiaSobranteCentral(i_central)+consumoMasPerdidas(i_central, i)) //hay energia suficiente en la i_central para j
+            return false;
+        else if (j_central != -1 && consumoMasPerdidas(j_central, i) > energiaSobranteCentral(j_central)+consumoMasPerdidas(j_central, j)) //hay energia suficiente en la j_central para i
+            return false;
+        else {
+            return true;
+        }
     }
 
     // Cert si la central i pot bolcar tots els seus clients a la central j
