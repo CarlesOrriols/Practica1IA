@@ -211,17 +211,24 @@ public class EnergiaEstado {
 
     // Mou tots els clients de la central i a la central j.
     public void vaciarCentral(int cOrigen, int cDestino) {
-        if (cOrigen == -1 && cDestino != -1) { // Asignamos todos los clientes de fuera a cDestino
+        if (cOrigen == -1 && cDestino != -1) { // Asignamos todos los clientes posibles de fuera a cDestino
             if (energia_servida[cDestino] == 0.0) { // Si la central destino esta vacia, la encendemos
                 beneficio -= costeCentralEncendida(cDestino);
                 beneficio += costeCentralParada(cDestino);
             }
-            for (int cli = 0; cli < clientes_asignados.length; cli++) {
-                if (clientes_asignados[cli] == -1) {
-                    energia_servida[cDestino] += consumoMasPerdidas(cDestino, cli);
-                    beneficio += clientes.get(cli).getConsumo() * precioMwCliente(cli) + precioPenalizacion(cli);
-                    clientes_asignados[cli] = cDestino;
+            int cli = 0;
+            boolean ultimo_cliente_assig = true;
+            while ( cli < clientes_asignados.length && ultimo_cliente_assig ) {
+                if (clientes_asignados[cli] == -1) { // clientes no assignados
+                    if ( energiaSobranteCentral(cDestino) < consumoMasPerdidas(cDestino, cli) ) { // si ya no cabe el cliente
+                        ultimo_cliente_assig = false;
+                    } else {
+                        energia_servida[cDestino] += consumoMasPerdidas(cDestino, cli);
+                        beneficio += clientes.get(cli).getConsumo() * precioMwCliente(cli) + precioPenalizacion(cli);
+                        clientes_asignados[cli] = cDestino;
+                    }
                 }
+                cli++;
             }
         }
         else if (cOrigen != -1 && cDestino == -1){ // Desasignamos clientes de una cOrigen
@@ -300,6 +307,11 @@ public class EnergiaEstado {
         if (cOrigen == cDestino) {
             return false;
         }
+        //
+        if (cOrigen == -1) { // intentaremos asignar el maximo de clientes al cDestino
+            return true;
+        }
+        //
         if (cOrigen != -1 && cDestino == -1) {
             for (int c = 0; c < clientes_asignados.length; c++) {
                 if (clientes_asignados[c] == cOrigen && clientes.get(c).getContrato() == 0) {
@@ -414,21 +426,23 @@ public class EnergiaEstado {
 
     public double heuristicFunction() {
         double suma_ocupacio = 0;
+        int n_centrals_enceses = 0;
         // double benefici_ideal = 0;
         for (int i = 0; i < getNCentrales(); ++i) {
-            suma_ocupacio += (energia_servida[i] / centrales.get(i).getProduccion());
-            /*
-            if (energia_servida[i] != 0)
-                benefici_ideal -= costeCentralEncendida(i);
-            */
+            if (energia_servida[i] != 0) {
+                suma_ocupacio += (energia_servida[i] / centrales.get(i).getProduccion());
+                n_centrals_enceses++;
+            }
         }
-        suma_ocupacio /= getNCentrales();
+        suma_ocupacio /= n_centrals_enceses; // mitjana de percentatges d'ocupacio de centrals enceses
 
         double  suma_distancia = 0;
+        int n_clients_assignats = 0;
         for (int i = 0; i < clientes_asignados.length; ++i) {
             if (clientes_asignados[i] != -1) {
                 // restant 10000 a la distancia aconseguirem que la distancia més llarga ens doni el resultat més petit
-                suma_distancia += (sqrt(20000) -  distancias[clientes_asignados[i]][i]) / 10000;
+                suma_distancia += (141.421356 - distancias[clientes_asignados[i]][i]) / 141.421356;
+                n_clients_assignats++;
             }
             /* Coses que he comentat perquè de moment veig innecessaries
             double consum = clientes.get(i).getConsumo();
@@ -444,11 +458,11 @@ public class EnergiaEstado {
             }
             */
         }
-        suma_distancia /= getNClientes();
+        suma_distancia /= n_clients_assignats;
         // double benefici = (beneficioTotal() / benefici_ideal) * 100;
 
 
-        return beneficioTotal(); //* (suma_ocupacio * 0.7 + suma_distancia * 0.3);
+        return beneficio * (suma_ocupacio * 0.5 + suma_distancia * 0.5);
     }
 
 }

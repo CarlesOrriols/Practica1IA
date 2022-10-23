@@ -8,14 +8,14 @@ BIN = ./exe/
 .SUFFIXES: .java .class
 
 .java.class:
-	$(JC) $(JFLAGS) $*.java -cp $(CCPATHS) -encoding iso-8859-1 -d $(BIN)
+	$(JC) $(JFLAGS) $*.java -Xlint -cp $(CCPATHS) -encoding iso-8859-1 -d $(BIN)
 
 CCPATHS = ./src:$(JARS)
 RCPATHS = $(BIN):$(JARS)
 
 CLASSES = ./src/*.java
 
-JARS = ./libraries/AIMA.jar:./libraries/CentralEnergia.jar
+JARS = ./libraries/AIMA.jar:./libraries/CentralEnergia.jar:./libraries/commons-cli-1.4.jar
 
 default: bin classes
 

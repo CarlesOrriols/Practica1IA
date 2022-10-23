@@ -29,6 +29,7 @@ public class Main {
 
         int semilla_random_estado_inicial = 3;
         EnergiaEstado estado_inicial = new EnergiaEstado(centrales, clientes, semilla_random_estado_inicial);
+        //EnergiaEstado estado_inicial = new EnergiaEstado(centrales, clientes);
         estado_inicial.print();
 
         Problem problem = new Problem(estado_inicial, successorFunction, new EnergiaGoalTest(), heuristicFunction);
