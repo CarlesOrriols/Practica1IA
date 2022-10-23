@@ -14,6 +14,7 @@ public class EnergiaEstado {
     private double suma_ocupacion_encendidas;
     private int n_clientes_asignados;
     private int n_centrales_encendidas;
+    private int profundidad_arbol;
     private static Centrales centrales;
     private static Clientes clientes;
     private static double[][] distancias; // [central][cliente]
@@ -26,6 +27,7 @@ public class EnergiaEstado {
         this.suma_distancias_asignados = energiaEstado.suma_distancias_asignados;
         this.suma_ocupacion_encendidas = energiaEstado.suma_ocupacion_encendidas;
         this.n_centrales_encendidas = energiaEstado.n_centrales_encendidas;
+        this.profundidad_arbol = energiaEstado.profundidad_arbol + 1;
 
         for(int i = 0; i < clientes_asignados.length; ++i) {
             this.clientes_asignados[i] = energiaEstado.clientes_asignados[i];
@@ -44,6 +46,7 @@ public class EnergiaEstado {
         centrales = ce;
         clientes = cl;
         distancias = new double[ce.size()][cl.size()];
+        profundidad_arbol = 0;
 
         // Precalcular distancias entre centrales y clientes
         for (int i_central = 0; i_central < centrales.size(); i_central++) {
@@ -101,7 +104,7 @@ public class EnergiaEstado {
     }
 
     public EnergiaEstado(Centrales ce, Clientes cl) { // Estado inicial asignando el maximo de clientes a las centrales de indice menor
-
+        profundidad_arbol = 0;
         centrales = ce;
         clientes = cl;
         distancias = new double[ce.size()][cl.size()];
@@ -447,6 +450,7 @@ public class EnergiaEstado {
         System.out.println("Beneficio: " + beneficio);
         // print que li he posat per veure la FH
         System.out.println("Heuristica: " + heuristicFunction());
+        System.out.println("Profundiad: " + profundidad_arbol);
         System.out.println("---------------------");
     }
 
@@ -514,15 +518,13 @@ public class EnergiaEstado {
         return (energia_servida[i_central] / centrales.get(i_central).getProduccion());
     }
 
-    // Funcio heurística de prova (he comentat moltes coses pq nose si al final les necessitarem)
-    // TODO: Acabar de mirar la heuristica pq em temo que no acaba de funcionar hehe
-
+    // Funcio heurística con precalculo
     public double heuristicFunction() {
 
         double proporcion_distancia = suma_distancias_asignados/n_clientes_asignados;
         double proporcion_ocupacion = suma_ocupacion_encendidas/n_centrales_encendidas;
 
-        return beneficio * (proporcion_ocupacion*0.4 + proporcion_distancia*0.6);
+        return beneficio * (0.4*proporcion_ocupacion + 0.6*proporcion_distancia);
     }
 
 }
