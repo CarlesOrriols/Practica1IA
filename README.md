@@ -13,7 +13,7 @@ Para compilar el programa, desde esta misma carpeta ejecutar en el terminal:<br 
 Para ejecutar el programa, ejecutar en el terminal:
 * java Main (Parámetros)
 
-Parametros:<br /><br />
+<strong>Parametros:</strong><br /><br />
 seed es la semilla para la generación de las centrales:
 * -sce seed<br />
 
