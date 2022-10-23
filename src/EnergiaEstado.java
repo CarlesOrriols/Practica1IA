@@ -518,43 +518,9 @@ public class EnergiaEstado {
     // TODO: Acabar de mirar la heuristica pq em temo que no acaba de funcionar hehe
 
     public double heuristicFunction() {
-//        double suma_ocupacio = 0;
-//        int n_centrals_enceses = 0;
-//        // double benefici_ideal = 0;
-//        for (int i = 0; i < getNCentrales(); ++i) {
-//            if (energia_servida[i] != 0) {
-//                suma_ocupacio += (energia_servida[i] / centrales.get(i).getProduccion());
-//                n_centrals_enceses++;
-//            }
-//        }
-//        suma_ocupacio /= n_centrals_enceses; // mitjana de percentatges d'ocupacio de centrals enceses
-//
-//        double  suma_distancia = 0;
-//        int n_clients_assignats = 0;
-//        for (int i = 0; i < clientes_asignados.length; ++i) {
-//            if (clientes_asignados[i] != -1) {
-//                // restant 10000 a la distancia aconseguirem que la distancia més llarga ens doni el resultat més petit
-//                suma_distancia += (141.421356 - distancias[clientes_asignados[i]][i]) / 141.421356;
-//                n_clients_assignats++;
-//            }
-//            /* Coses que he comentat perquè de moment veig innecessaries
-//            double consum = clientes.get(i).getConsumo();
-//            if (clientes.get(i).getTipo() == 0) {
-//                if (consum > 5) benefici_ideal += 400 * consum;
-//                else if (consum <= 2) benefici_ideal += 600 * consum;
-//                else benefici_ideal += 500 * consum;
-//            }
-//            else {
-//                if (consum > 5) benefici_ideal += 300 * consum;
-//                else if (consum <= 2) benefici_ideal += 500 * consum;
-//                else benefici_ideal += 400 * consum;
-//            }
-//            */
-//        }
+
         double proporcion_distancia = suma_distancias_asignados/n_clientes_asignados;
         double proporcion_ocupacion = suma_ocupacion_encendidas/n_centrales_encendidas;
-        // double benefici = (beneficioTotal() / benefici_ideal) * 100;
-
 
         return beneficio * (proporcion_ocupacion*0.4 + proporcion_distancia*0.6);
     }
