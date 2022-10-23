@@ -19,7 +19,7 @@ seed es la semilla para la generación de las centrales:<br />
 seed es la semilla apra la generación de los clientes:<br />
 * -scl seed
 num es el número de clientes que queremos tener:
-<br />* -ncl num
+<br />-ncl num
 tA, tB y tC són el numero de centrales de cada tipo:<br />
 * -ntce tA tB tC
 pXG, pMG y pG són la proporcion de clientes de cada tipo(deben sumar 1):<br />
