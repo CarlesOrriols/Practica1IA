@@ -23,6 +23,7 @@ public class Main {
         print(clientes);
  /*       print_energia();*/
 
+        long startTime = System.nanoTime();
         Search typeOfSearch = new HillClimbingSearch();
         SuccessorFunction successorFunction =  new EnergiaSuccessorFunctionHillClimbing();
         HeuristicFunction heuristicFunction = new EnergiaHeuristicFunction();
@@ -37,6 +38,9 @@ public class Main {
 
         EnergiaEstado goalState = (EnergiaEstado) typeOfSearch.getGoalState();
         goalState.print();
+
+        long endTime = System.nanoTime();
+        System.out.println((endTime - startTime) / 1000000000.0 + " seconds");
     }
 
     private static void print(Centrales centrales) {

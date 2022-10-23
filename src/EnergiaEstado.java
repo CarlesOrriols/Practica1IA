@@ -462,7 +462,7 @@ public class EnergiaEstado {
         // double benefici = (beneficioTotal() / benefici_ideal) * 100;
 
 
-        return beneficio * (suma_ocupacio * 0.5 + suma_distancia * 0.5);
+        return beneficio * (suma_ocupacio * 0.0 + suma_distancia * 1.0);
     }
 
 }
