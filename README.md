@@ -14,7 +14,7 @@ Para ejecutar el programa, ejecutar en el terminal:
 * java Main (Parámetros)
 
 
-<strong><u>Parametros:</u></strong><br /><br />
+<strong>Parametros:</strong><br /><br />
 seed es la semilla para la generación de las centrales:
 * -sce seed<br />
 
