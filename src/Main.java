@@ -1,10 +1,6 @@
 import IA.Energia.Centrales;
 import IA.Energia.Clientes;
 import IA.Energia.VEnergia;
-import aima.EnergiaEstado;
-import aima.EnergiaGoalTest;
-import aima.EnergiaHeuristicFunction;
-import aima.EnergiaSuccessorFunctionHillClimbing;
 import aima.search.framework.*;
 import aima.search.informed.HillClimbingSearch;
 

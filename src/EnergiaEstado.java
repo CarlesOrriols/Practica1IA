@@ -1,5 +1,3 @@
-package aima;
-
 import IA.Energia.Centrales;
 import IA.Energia.Clientes;
 import IA.Energia.VEnergia;

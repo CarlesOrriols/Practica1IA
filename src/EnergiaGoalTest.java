@@ -1,5 +1,3 @@
-package aima;
-
 import aima.search.framework.GoalTest;
 
 public class EnergiaGoalTest implements GoalTest {

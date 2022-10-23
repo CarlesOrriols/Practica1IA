@@ -1,5 +1,3 @@
-package aima;
-
 import aima.search.framework.HeuristicFunction;
 
 public class EnergiaHeuristicFunction implements HeuristicFunction {
