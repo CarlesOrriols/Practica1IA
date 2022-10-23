@@ -12,3 +12,23 @@ Para compilar el programa, desde esta misma carpeta ejecutar en el terminal:<br 
 
 Para ejecutar el programa, ejecutar en el terminal:
 * java Main (Parámetros)
+
+Parametros:
+seed es la semilla para la generación de las centrales:
+* -sce seed
+seed es la semilla apra la generación de los clientes:
+* -scl seed
+num es el número de clientes que queremos tener:
+* -ncl num
+tA, tB y tC són el numero de centrales de cada tipo:
+* -ntce tA tB tC
+pXG, pMG y pG són la proporcion de clientes de cada tipo(deben sumar 1):
+* -pcli pXG pMG pG
+p es la proporcion de garantizados que queremos tener:
+* -pg p
+seed es la semilla para la generación del estado inicial random:
+* -sei seed
+Para escoger el tipo de algoritmo, hc para Hill Climbing y sa para Simuleted Annealing
+* -hcorsa o
+Para escoger el tipo de estado inicial, "o" puede ser random o greedy
+* -ei o
