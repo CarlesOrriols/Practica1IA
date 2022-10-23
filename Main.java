@@ -107,6 +107,7 @@ public class Main {
             SearchAgent agent = new SearchAgent(problem, typeOfSearch);
             EnergiaEstado goalState = (EnergiaEstado) typeOfSearch.getGoalState();
             goalState.print();
+            goalState.printTiposCentralesEncendidas();
 
         } else if( hillClimbing_or_simulatedAnnealing.equals("sa") ) {
 
@@ -119,6 +120,7 @@ public class Main {
             EnergiaEstado goalState = (EnergiaEstado) search.getGoalState();
 
             goalState.print();
+            goalState.printTiposCentralesEncendidas();
 
         }
 

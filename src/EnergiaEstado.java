@@ -527,4 +527,27 @@ public class EnergiaEstado {
         return beneficio * (0.4*proporcion_ocupacion + 0.6*proporcion_distancia);
     }
 
+    public void printTiposCentralesEncendidas() {
+        int n_tipoA = 0;
+        int n_tipoB = 0;
+        int n_tipoC = 0;
+
+        for (int i = 0; i < energia_servida.length; i++) {
+            if ( energia_servida[i] != 0 ) { // central encendida
+                if (centrales.get(i).getTipo() == 0) { // central de tipo A
+                    n_tipoA++;
+                } else if (centrales.get(i).getTipo() == 1) { // central de tipo B
+                    n_tipoB++;
+                } else if (centrales.get(i).getTipo() == 2) { // central de tipo C
+                    n_tipoC++;
+                }
+            }
+        }
+
+        System.out.println("Tipo A: " + n_tipoA);
+        System.out.println("Tipo B: " + n_tipoB);
+        System.out.println("Tipo C: " + n_tipoC);
+
+    }
+
 }
