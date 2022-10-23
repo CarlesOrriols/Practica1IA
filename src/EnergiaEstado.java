@@ -11,7 +11,9 @@ public class EnergiaEstado {
     private double beneficio;
     private double[] energia_servida;
     private double suma_distancias_asignados;
+    private double suma_ocupacion_encendidas;
     private int n_clientes_asignados;
+    private int n_centrales_encendidas;
     private static Centrales centrales;
     private static Clientes clientes;
     private static double[][] distancias; // [central][cliente]
@@ -22,6 +24,8 @@ public class EnergiaEstado {
         this.beneficio = energiaEstado.beneficio;
         this.n_clientes_asignados = energiaEstado.n_clientes_asignados;
         this.suma_distancias_asignados = energiaEstado.suma_distancias_asignados;
+        this.suma_ocupacion_encendidas = energiaEstado.suma_ocupacion_encendidas;
+        this.n_centrales_encendidas = energiaEstado.n_centrales_encendidas;
 
         for(int i = 0; i < clientes_asignados.length; ++i) {
             this.clientes_asignados[i] = energiaEstado.clientes_asignados[i];
@@ -55,6 +59,8 @@ public class EnergiaEstado {
 
         n_clientes_asignados = 0;
         suma_distancias_asignados = 0.0;
+        n_centrales_encendidas = 0;
+        suma_ocupacion_encendidas = 0.0;
         beneficio = 0.0;     // beneficio si no hay ningun cliente asignado (mas abajo restamos la penalizacion de los clientes no asignados)
         energia_servida = new double[ce.size()];
         for (int i = 0; i < energia_servida.length; i++) { // inicializamos todas las energias ocupadas a 0
@@ -115,6 +121,9 @@ public class EnergiaEstado {
 
         n_clientes_asignados = 0;
         suma_distancias_asignados = 0.0;
+        n_centrales_encendidas = 0;
+        suma_ocupacion_encendidas = 0.0;
+
         beneficio = 0.0;     // beneficio si no hay ningun cliente asignado (mas abajo restamos la penalizacion de los clientes no asignados)
         energia_servida = new double[ce.size()];
         for (int i = 0; i < energia_servida.length; i++) { // inicializamos todas las energias ocupadas a 0
@@ -160,6 +169,7 @@ public class EnergiaEstado {
         if (centralAntigua == -1 && centralDestino != -1) { //Cliente NO asignado -> Asignado
             n_clientes_asignados++;
             suma_distancias_asignados += normalizaDistancia(centralDestino, i_cliente);
+
             beneficio += clientes.get(i_cliente).getConsumo() * precioMwCliente(i_cliente);
             if (clientes.get(i_cliente).getContrato() == 1) {
                 beneficio += precioPenalizacion(i_cliente);
@@ -167,15 +177,22 @@ public class EnergiaEstado {
             if (energia_servida[centralDestino] == 0.0) { //se tiene que encender
                 beneficio -= costeCentralEncendida(centralDestino);
                 beneficio += costeCentralParada(centralDestino);
+                n_centrales_encendidas++;
             }
+            suma_ocupacion_encendidas -= normalizaOcupacion(centralDestino);
             energia_servida[centralDestino] += consumoMasPerdidas(centralDestino, i_cliente);
+            suma_ocupacion_encendidas += normalizaOcupacion(centralDestino);
         }
         else if (centralAntigua != -1 && centralDestino == -1) { //Cliente Asignado -> NO asignado
             n_clientes_asignados--;
             suma_distancias_asignados -= normalizaDistancia(centralAntigua, i_cliente);
             beneficio -= clientes.get(i_cliente).getConsumo() * precioMwCliente(i_cliente) + precioPenalizacion(i_cliente);
+
+            suma_ocupacion_encendidas -= normalizaOcupacion(centralAntigua);
             energia_servida[centralAntigua] -= consumoMasPerdidas(centralAntigua, i_cliente);
+            suma_ocupacion_encendidas += normalizaOcupacion(centralAntigua);
             if (energia_servida[centralAntigua] == 0.0) {
+                n_centrales_encendidas--;
                 beneficio -= costeCentralParada(centralAntigua);
                 beneficio += costeCentralEncendida(centralAntigua);
             }
@@ -183,16 +200,23 @@ public class EnergiaEstado {
         else if (centralAntigua != -1 && centralDestino != -1) { //cliente cambia de central
             suma_distancias_asignados += normalizaDistancia(centralDestino, i_cliente);
             suma_distancias_asignados -= normalizaDistancia(centralAntigua, i_cliente);
+
+            suma_ocupacion_encendidas -= normalizaOcupacion(centralAntigua);
             energia_servida[centralAntigua] -= consumoMasPerdidas(centralAntigua, i_cliente);
+            suma_ocupacion_encendidas += normalizaOcupacion(centralAntigua);
             if (energia_servida[centralAntigua] == 0.0) {
+                n_centrales_encendidas--;
                 beneficio -= costeCentralParada(centralAntigua);
                 beneficio += costeCentralEncendida(centralAntigua);
             }
             if (energia_servida[centralDestino] == 0.0) { //se tiene que encender
                 beneficio += costeCentralParada(centralDestino);
                 beneficio -= costeCentralEncendida(centralDestino);
+                n_centrales_encendidas++;
             }
+            suma_ocupacion_encendidas -= normalizaOcupacion(centralDestino);
             energia_servida[centralDestino] += consumoMasPerdidas(centralDestino, i_cliente);
+            suma_ocupacion_encendidas += normalizaOcupacion(centralDestino);
         }
         // Actualizar clientes asignados
         clientes_asignados[i_cliente] = centralDestino;
@@ -209,17 +233,26 @@ public class EnergiaEstado {
             suma_distancias_asignados += normalizaDistancia(i_central, j);
             suma_distancias_asignados += normalizaDistancia(j_central, i);
 
+            suma_ocupacion_encendidas -= normalizaOcupacion(i_central);
             energia_servida[i_central] -= consumoMasPerdidas(i_central, i);
             energia_servida[i_central] += consumoMasPerdidas(i_central, j);
+            suma_ocupacion_encendidas += normalizaOcupacion(i_central);
+
+            suma_ocupacion_encendidas -= normalizaOcupacion(j_central);
             energia_servida[j_central] -= consumoMasPerdidas(j_central, j);
             energia_servida[j_central] += consumoMasPerdidas(j_central, i);
+            suma_ocupacion_encendidas += normalizaOcupacion(j_central);
         }
         if (i_central == -1 && j_central != -1) {
             suma_distancias_asignados -= normalizaDistancia(j_central, j);
             suma_distancias_asignados += normalizaDistancia(j_central, i);
 
+            suma_ocupacion_encendidas -= normalizaOcupacion(j_central);
             energia_servida[j_central] -= consumoMasPerdidas(j_central, j);
             energia_servida[j_central] += consumoMasPerdidas(j_central, i);
+            suma_ocupacion_encendidas += normalizaOcupacion(j_central);
+
+
             beneficio -= clientes.get(j).getConsumo() * precioMwCliente(j) + precioPenalizacion(j);
             beneficio += clientes.get(i).getConsumo() * precioMwCliente(i) + precioPenalizacion(i);
         }
@@ -227,8 +260,11 @@ public class EnergiaEstado {
             suma_distancias_asignados -= normalizaDistancia(i_central, i);
             suma_distancias_asignados += normalizaDistancia(i_central, j);
 
+            suma_ocupacion_encendidas -= normalizaOcupacion(i_central);
             energia_servida[i_central] -= consumoMasPerdidas(i_central, i);
             energia_servida[i_central] += consumoMasPerdidas(i_central, j);
+            suma_ocupacion_encendidas += normalizaOcupacion(i_central);
+
             beneficio -= clientes.get(i).getConsumo() * precioMwCliente(i) + precioPenalizacion(i);
             beneficio += clientes.get(j).getConsumo() * precioMwCliente(j) + precioPenalizacion(j);
         }
@@ -242,6 +278,7 @@ public class EnergiaEstado {
             if (energia_servida[cDestino] == 0.0) { // Si la central destino esta vacia, la encendemos
                 beneficio -= costeCentralEncendida(cDestino);
                 beneficio += costeCentralParada(cDestino);
+                n_centrales_encendidas++;
             }
             int cli = 0;
             boolean ultimo_cliente_assig = true;
@@ -253,7 +290,10 @@ public class EnergiaEstado {
                         n_clientes_asignados++;
                         suma_distancias_asignados += normalizaDistancia(cDestino, cli);
 
+                        suma_ocupacion_encendidas -= normalizaOcupacion(cDestino);
                         energia_servida[cDestino] += consumoMasPerdidas(cDestino, cli);
+                        suma_ocupacion_encendidas += normalizaOcupacion(cDestino);
+
                         beneficio += clientes.get(cli).getConsumo() * precioMwCliente(cli) + precioPenalizacion(cli);
                         clientes_asignados[cli] = cDestino;
                     }
@@ -262,6 +302,7 @@ public class EnergiaEstado {
             }
         }
         else if (cOrigen != -1 && cDestino == -1){ // Desasignamos clientes de una cOrigen
+            n_centrales_encendidas--;
             for (int cli = 0; cli < clientes_asignados.length; cli++) {
                 if (clientes_asignados[cli] == cOrigen) {
                     n_clientes_asignados--;
@@ -271,18 +312,26 @@ public class EnergiaEstado {
                     clientes_asignados[cli] = -1;
                 }
             }
+            suma_ocupacion_encendidas -= normalizaOcupacion(cOrigen);
             energia_servida[cOrigen] = 0.0;
+
             beneficio -= costeCentralParada(cOrigen);
             beneficio += costeCentralEncendida(cOrigen);
         }
         else { // Volcamos una central a otra (ninguna esta fuera)
+            suma_ocupacion_encendidas -= normalizaOcupacion(cOrigen);
             energia_servida[cOrigen] = 0.0;
+
             beneficio -= costeCentralParada(cOrigen);
             beneficio += costeCentralEncendida(cOrigen);
+            n_centrales_encendidas--;
             if (energia_servida[cDestino] == 0.0) {
                 beneficio += costeCentralParada(cDestino);
                 beneficio -= costeCentralEncendida(cDestino);
+                n_centrales_encendidas++;
             }
+
+            suma_ocupacion_encendidas -= normalizaOcupacion(cDestino);
             for (int cli = 0; cli < clientes_asignados.length; cli++) {
                 if (clientes_asignados[cli] == cOrigen) {
                     suma_distancias_asignados -= normalizaDistancia(cOrigen, cli);
@@ -292,6 +341,7 @@ public class EnergiaEstado {
                     energia_servida[cDestino] += consumoMasPerdidas(cDestino,cli);
                 }
             }
+            suma_ocupacion_encendidas += normalizaOcupacion(cDestino);
         }
     }
 
@@ -460,20 +510,24 @@ public class EnergiaEstado {
         return (141.421356 - distancias[i_central][i_cliente]) / 141.421356;
     }
 
+    private double normalizaOcupacion (int i_central) {
+        return (energia_servida[i_central] / centrales.get(i_central).getProduccion());
+    }
+
     // Funcio heurística de prova (he comentat moltes coses pq nose si al final les necessitarem)
     // TODO: Acabar de mirar la heuristica pq em temo que no acaba de funcionar hehe
 
     public double heuristicFunction() {
-        double suma_ocupacio = 0;
-        int n_centrals_enceses = 0;
-        // double benefici_ideal = 0;
-        for (int i = 0; i < getNCentrales(); ++i) {
-            if (energia_servida[i] != 0) {
-                suma_ocupacio += (energia_servida[i] / centrales.get(i).getProduccion());
-                n_centrals_enceses++;
-            }
-        }
-        suma_ocupacio /= n_centrals_enceses; // mitjana de percentatges d'ocupacio de centrals enceses
+//        double suma_ocupacio = 0;
+//        int n_centrals_enceses = 0;
+//        // double benefici_ideal = 0;
+//        for (int i = 0; i < getNCentrales(); ++i) {
+//            if (energia_servida[i] != 0) {
+//                suma_ocupacio += (energia_servida[i] / centrales.get(i).getProduccion());
+//                n_centrals_enceses++;
+//            }
+//        }
+//        suma_ocupacio /= n_centrals_enceses; // mitjana de percentatges d'ocupacio de centrals enceses
 //
 //        double  suma_distancia = 0;
 //        int n_clients_assignats = 0;
@@ -498,10 +552,11 @@ public class EnergiaEstado {
 //            */
 //        }
         double proporcion_distancia = suma_distancias_asignados/n_clientes_asignados;
+        double proporcion_ocupacion = suma_ocupacion_encendidas/n_centrales_encendidas;
         // double benefici = (beneficioTotal() / benefici_ideal) * 100;
 
 
-        return beneficio * (suma_ocupacio*0.4 + proporcion_distancia*0.6);
+        return beneficio * (proporcion_ocupacion*0.4 + proporcion_distancia*0.6);
     }
 
 }
