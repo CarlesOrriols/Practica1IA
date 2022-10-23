@@ -27,7 +27,7 @@ public class Main {
         String hillClimbing_or_simulatedAnnealing = "hc"; // -hcorsa (hc / sa)
         String tipo_estado_inicial = "random"; // -ei (random / greedy)
 
-        for (int i=1; i < args.length; i+=2) {
+        for (int i=0; i < args.length; i+=2) {
             switch(args[i]) {
                 case "-sce":
                     semilla_random_centrales = Integer.parseInt(args[i+1]);
@@ -67,7 +67,7 @@ public class Main {
 
         Clientes clientes = new Clientes(num_clientes, proporciones_cli, proporcion_garantizado, semilla_random_clientes);
 
-        print(centrales);
+//        print(centrales);
 //        print(clientes);
 //        print_energia();
         long startTime = System.nanoTime();

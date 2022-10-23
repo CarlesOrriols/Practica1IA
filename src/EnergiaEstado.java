@@ -444,9 +444,9 @@ public class EnergiaEstado {
     // Imprimir el estado
     public void print() {
         System.out.println("------ ESTADO -------");
-        for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) { // Centrales
-            System.out.println("Cliente " + i_cliente + " -> " + clientes_asignados[i_cliente] + " -> " + clientes.get(i_cliente).getConsumo()*precioMwCliente(i_cliente) + "->" + precioPenalizacion(i_cliente) + " -> " + clientes.get(i_cliente).getContrato());
-        }
+//        for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) { // Centrales
+//            System.out.println("Cliente " + i_cliente + " -> " + clientes_asignados[i_cliente] + " -> " + clientes.get(i_cliente).getConsumo()*precioMwCliente(i_cliente) + "->" + precioPenalizacion(i_cliente) + " -> " + clientes.get(i_cliente).getContrato());
+//        }
         System.out.println("Beneficio: " + beneficio);
         // print que li he posat per veure la FH
         System.out.println("Heuristica: " + heuristicFunction());
