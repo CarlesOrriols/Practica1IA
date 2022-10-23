@@ -73,14 +73,15 @@ public class Main {
         long startTime = System.nanoTime();
 
         EnergiaEstado estado_inicial;
-        if ( tipo_estado_inicial == "random" ) {
+        if ( tipo_estado_inicial.equals("random") ) {
             estado_inicial = new EnergiaEstado(centrales, clientes, semilla_random_estado_inicial);
         } else { // greedy
             estado_inicial = new EnergiaEstado(centrales, clientes);
         }
         estado_inicial.print();
 
-        if ( hillClimbing_or_simulatedAnnealing == "hc" ){
+        System.out.println("Algoritmo -> " + hillClimbing_or_simulatedAnnealing);
+        if ( hillClimbing_or_simulatedAnnealing.equals("hc") ){
             Search typeOfSearch = new HillClimbingSearch();
             SuccessorFunction successorFunction =  new EnergiaSuccessorFunctionHillClimbing();
             HeuristicFunction heuristicFunction = new EnergiaHeuristicFunction();
@@ -90,14 +91,16 @@ public class Main {
             EnergiaEstado goalState = (EnergiaEstado) typeOfSearch.getGoalState();
             goalState.print();
 
-        } else if( hillClimbing_or_simulatedAnnealing == "sa" ) {
+        } else if( hillClimbing_or_simulatedAnnealing.equals("sa") ) {
+
             SuccessorFunction successorFunction = new EnergiaSuccessorFunctionSimmulatedAnnealing();
             HeuristicFunction heuristicFunction = new EnergiaHeuristicFunction();
             SimulatedAnnealingSearch search = new SimulatedAnnealingSearch(2000, 100, 5, 0.001);
-
             Problem problem = new Problem(estado_inicial, successorFunction, new EnergiaGoalTest(), heuristicFunction);
             SearchAgent agent = new SearchAgent(problem, search);
+
             EnergiaEstado goalState = (EnergiaEstado) search.getGoalState();
+
             goalState.print();
 
         }

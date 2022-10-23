@@ -14,9 +14,25 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
         EnergiaHeuristicFunction HF  = new EnergiaHeuristicFunction();
         Random                   myRandom = new Random();
 
-        int op = myRandom.nextInt(3);
         int i,j;
         EnergiaEstado estatNou;
+        int op;
+
+        long n_mover = estatVell.getNCentrales() * estatVell.getNClientes();
+        long n_intercambiar = (estatVell.getNClientes() * (estatVell.getNClientes()-1))/2;
+        long n_vaciar = estatVell.getNCentrales() * estatVell.getNCentrales();
+
+        long total_successors = n_mover + n_intercambiar + n_vaciar;
+
+        long n_rand = myRandom.nextLong(total_successors);
+
+        if ( n_rand < n_mover ) {
+            op = 0; // operador mover
+        } else if ( n_rand < (n_mover+n_intercambiar) ) {
+            op = 1; // operador intercambiar
+        } else {
+            op = 2; // operador vaciar
+        }
 
         switch (op) {
             case 0: //mover
