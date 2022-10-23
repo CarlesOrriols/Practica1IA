@@ -15,7 +15,7 @@ Para ejecutar el programa, ejecutar en el terminal:
 
 Parametros:<br />
 seed es la semilla para la generación de las centrales:
-<br />* -sce seed<br />
+* -sce seed
 seed es la semilla apra la generación de los clientes:
 <br />-scl seed<br />
 num es el número de clientes que queremos tener:
