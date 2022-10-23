@@ -8,6 +8,10 @@ import aima.search.framework.*;
 import aima.search.informed.HillClimbingSearch;
 import aima.search.informed.SimulatedAnnealingSearch;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -72,6 +76,19 @@ public class Main {
 //        print_energia();
         long startTime = System.nanoTime();
 
+
+
+        /*
+        FileOutputStream os = null;
+        try {
+            os = new FileOutputStream("simulatedannelaing.txt");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        PrintStream ps = new PrintStream(os);
+        */
+
+
         EnergiaEstado estado_inicial;
         if ( tipo_estado_inicial.equals("random") ) {
             estado_inicial = new EnergiaEstado(centrales, clientes, semilla_random_estado_inicial);
@@ -95,7 +112,7 @@ public class Main {
 
             SuccessorFunction successorFunction = new EnergiaSuccessorFunctionSimmulatedAnnealing();
             HeuristicFunction heuristicFunction = new EnergiaHeuristicFunction();
-            SimulatedAnnealingSearch search = new SimulatedAnnealingSearch(2000, 100, 5, 0.001);
+            SimulatedAnnealingSearch search = new SimulatedAnnealingSearch(100000, 100, 15625, 0.0001);
             Problem problem = new Problem(estado_inicial, successorFunction, new EnergiaGoalTest(), heuristicFunction);
             SearchAgent agent = new SearchAgent(problem, search);
 

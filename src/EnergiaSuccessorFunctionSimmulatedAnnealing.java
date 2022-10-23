@@ -1,3 +1,6 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,6 +17,16 @@ public class EnergiaSuccessorFunctionSimmulatedAnnealing implements SuccessorFun
         EnergiaHeuristicFunction HF  = new EnergiaHeuristicFunction();
         Random                   myRandom = new Random();
 
+        /*
+        FileOutputStream os = null;
+        try {
+            os = new FileOutputStream("simulatedannelaing.txt", true);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        PrintStream ps = new PrintStream(os);
+        ps.println(estatVell.beneficioTotal());
+        */
         int i,j;
         EnergiaEstado estatNou;
         int op;

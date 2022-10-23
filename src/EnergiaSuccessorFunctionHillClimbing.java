@@ -1,6 +1,9 @@
 import aima.search.framework.Successor;
 import aima.search.framework.SuccessorFunction;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +14,15 @@ public class EnergiaSuccessorFunctionHillClimbing implements SuccessorFunction {
         ArrayList                retVal = new ArrayList();
         EnergiaEstado            estatVell  = (EnergiaEstado) o;
         EnergiaHeuristicFunction HF  = new EnergiaHeuristicFunction();
+
+        /*FileOutputStream os = null;
+        try {
+            os = new FileOutputStream("hillclimbing.txt", true);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        PrintStream ps = new PrintStream(os);
+        ps.println(estatVell.beneficioTotal()); */
 
         // Moure clients
         for (int i = 0; i < estatVell.getNClientes(); i++) {
