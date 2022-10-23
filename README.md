@@ -11,7 +11,7 @@ Para compilar el programa, desde esta misma carpeta ejecutar en el terminal:<br 
 * javac -g Main.java ./src/*.java
 
 Para ejecutar el programa, ejecutar en el terminal:
-* java Main (Parámetros)
+* java Main (Parámetros)<br /><br />
 
 
 <strong>Parametros:</strong><br /><br />
