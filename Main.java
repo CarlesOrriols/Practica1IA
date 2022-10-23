@@ -25,7 +25,7 @@ public class Main {
         int semilla_random_estado_inicial = 8; // -sei
 
         String hillClimbing_or_simulatedAnnealing = "hc"; // -hcorsa (hc / sa)
-        String tipo_estado_inicial = "random"; // -ei (random / greedy)
+        String tipo_estado_inicial = "greedy"; // -ei (random / greedy)
 
         for (int i=0; i < args.length; i+=2) {
             switch(args[i]) {
