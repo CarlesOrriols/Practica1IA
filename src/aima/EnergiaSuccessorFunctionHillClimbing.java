@@ -27,31 +27,31 @@ public class EnergiaSuccessorFunctionHillClimbing implements SuccessorFunction {
             }
         }
 
-//        // Intercanviar clients amb clients
-//        for (int i = 0; i < estatVell.getNClientes(); i++) {
-//            for (int j = i+1; j < estatVell.getNClientes(); j++) {
-//                if(estatVell.sePuedenIntercambiarClientes(i, j)) {
-//                    EnergiaEstado estatNou = new EnergiaEstado(estatVell);
-//                    estatNou.intercambiarClientes(i, j);
-//
-//                    retVal.add(new Successor("", estatNou));
-//
-//                }
-//            }
-//        }
-//
-//        // Buidar central
-//        for (int i = -1; i < estatVell.getNCentrales(); i++) {
-//            for (int j = -1; j < estatVell.getNCentrales(); j++) {
-//                if(estatVell.sePuedeVaciarCentral(i, j)) {
-//                    EnergiaEstado estatNou = new EnergiaEstado(estatVell);
-//                    estatNou.vaciarCentral(i, j);
-//
-//                    retVal.add(new Successor("", estatNou));
-//
-//                }
-//            }
-//        }
+        // Intercanviar clients amb clients
+        for (int i = 0; i < estatVell.getNClientes(); i++) {
+            for (int j = i+1; j < estatVell.getNClientes(); j++) {
+                if(estatVell.sePuedenIntercambiarClientes(i, j)) {
+                    EnergiaEstado estatNou = new EnergiaEstado(estatVell);
+                    estatNou.intercambiarClientes(i, j);
+
+                    retVal.add(new Successor("", estatNou));
+
+                }
+            }
+        }
+
+        // Buidar central
+        for (int i = -1; i < estatVell.getNCentrales(); i++) {
+            for (int j = -1; j < estatVell.getNCentrales(); j++) {
+                if(estatVell.sePuedeVaciarCentral(i, j)) {
+                    EnergiaEstado estatNou = new EnergiaEstado(estatVell);
+                    estatNou.vaciarCentral(i, j);
+
+                    retVal.add(new Successor("", estatNou));
+
+                }
+            }
+        }
 
         return retVal;
     }

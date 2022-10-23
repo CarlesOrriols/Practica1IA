@@ -13,18 +13,18 @@ public class Main {
     public static void main(String[] args) throws Exception {
 //        System.out.println("Hello world!");
 
-        int[] num_tipos_centrales = new int[] {2,3,3};
+        int[] num_tipos_centrales = new int[] {5,10,25};
         int semilla_random_centrales = 100;
         Centrales centrales = new Centrales(num_tipos_centrales, semilla_random_centrales);
 
-        int num_clientes = 10;
-        double[] proporciones_cli = new double[] {0.3, 0.3, 0.4};
-        double proporcion_garantizado = 0.6;
+        int num_clientes = 1000;
+        double[] proporciones_cli = new double[] {0.25, 0.3, 0.45};
+        double proporcion_garantizado = 0.75;
         int semilla_random_clientes = 7;
         Clientes clientes = new Clientes(num_clientes, proporciones_cli, proporcion_garantizado, semilla_random_clientes);
 
         print(centrales);
-//        print(clientes);
+        print(clientes);
  /*       print_energia();*/
 
         Search typeOfSearch = new HillClimbingSearch();

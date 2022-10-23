@@ -65,6 +65,10 @@ public class EnergiaEstado {
             clientes_asignados[i_cliente] = -1;
         }
 
+        for (int i_central = 0; i_central < centrales.size(); i_central++) {
+            beneficio -= costeCentralParada(i_central);
+        }
+
         // Asignamos los clientes a una central random, si no puede ser asignado por una restriccion del problema, se asigna a otra tambien de forma aleatoria
         for (int i_cliente = 0; i_cliente < clientes_asignados.length; i_cliente++) {
             if ( clientes.get(i_cliente).getContrato() == 0 ) { // clientes garantizados se asignan a una central
@@ -147,9 +151,13 @@ public class EnergiaEstado {
         // Actualizar energia asignada
         int centralAntigua = clientes_asignados[i_cliente];
         if (centralAntigua == -1 && centralDestino != -1) { //Cliente NO asignado -> Asignado
-            beneficio += clientes.get(i_cliente).getConsumo() * precioMwCliente(i_cliente) + precioPenalizacion(i_cliente);
+            beneficio += clientes.get(i_cliente).getConsumo() * precioMwCliente(i_cliente);
+            if (clientes.get(i_cliente).getContrato() == 1) {
+                beneficio += precioPenalizacion(i_cliente);
+            }
             if (energia_servida[centralDestino] == 0.0) { //se tiene que encender
-                beneficio -= costeCentralEncendida((centralDestino));
+                beneficio -= costeCentralEncendida(centralDestino);
+                beneficio += costeCentralParada(centralDestino);
             }
             energia_servida[centralDestino] += consumoMasPerdidas(centralDestino, i_cliente);
         }
