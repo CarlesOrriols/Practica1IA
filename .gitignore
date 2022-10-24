@@ -6,5 +6,5 @@ src/AIMA.jar
 Projecte.iml
 src/CentralEnergia.jar
 /Practica1IA.iml
-/src/EnergiaEstado.class
+/src/*.class
 
