@@ -2,7 +2,7 @@ import IA.Energia.Centrales;
 import IA.Energia.Clientes;
 import IA.Energia.VEnergia;
 
-import java.util.Random;
+import java.util.Random;//hola
 
 import static java.lang.Math.sqrt;
 
